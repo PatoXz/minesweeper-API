@@ -1,6 +1,5 @@
 package com.patriciomascialino.minesweeper.game;
 
-import com.patriciomascialino.minesweeper.utils.Coordinate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +12,7 @@ public class BoardTest {
     @Test
     public void bombHitTest() {
         Board board = new Board(10, 10, 1);
-        final Coordinate first = board.getBombsPositions().stream().findFirst().orElseThrow(RuntimeException::new);
+        final Coordinate first = board.getBombs().getBombsPositions().stream().findFirst().orElseThrow(RuntimeException::new);
 
         ClickResponse click = board.click(first.getX(), first.getY());
         assertEquals(ClickResult.BOMB, click.getClickResult());
