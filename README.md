@@ -1,4 +1,4 @@
-##Requirements
+## Requirements
 - [x] Ability to select the game parameters: number of rows, columns, and mines
 - [x] When a cell with no adjacent mines is revealed, all adjacent squares will be revealed (and repeat)
 - [ ] Detect when game is over
@@ -10,8 +10,8 @@
 - [ ] Time tracking
 - [ ] Ability to support multiple users/accounts
 
-##First part/commit
-####Solved points:
+## First part/commit
+#### Solved points:
 - Ability to select the game parameters: number of rows, columns, and mines
 - When a cell with no adjacent mines is revealed, all adjacent squares will be revealed (and repeat)
 
@@ -24,15 +24,15 @@ Taking this into account, having a board of 100x100 and only one bomb, without a
 
 After all this, I already had my board and the bombs setted. I could already check if a position had a bomb or was empty, but I was missing the uncover part of the adjacent cells.
 My idea was to, based on a cell, check the three upper cells, then both of its sides, and for last the three bottom cells.
-e.g: after clicking in the red cell, the order of checking would be:
+e.g: after clicking in the red cell, the order of checking would be:\
 ![alt text](docs/pic1.png)
 
-Another example would be: clicking in red, only checks its adjacent cells in that order, because there wasn’t any above row or left column.
+Another example can be: clicking in red, only checks its adjacent cells in that order, because there wasn’t any above row or left column.\
 ![alt text](docs/pic2.png)
 
 The last thing that I had to solve was the recurrency. For each checked cell, I had to do the same for each of its adjacent cells.
 
-A full example would be: having a bomb on X and clicking in red, would uncover all yellow cells and this ones will uncover the green ones. Of course, the X would still be covered.
+An for last, a full example: having a bomb on X and clicking in red, would uncover all yellow cells and this ones will uncover the green ones. Of course, the X would still be covered.\
 ![alt text](docs/pic3.png)
 
 To round up this first part, the method that processes everything when a cell is clicked, it returns a response of that click. It contains the result of that click, that could be an empty cell, an already clicked one, or a hit bomb. Also, it returns all uncovered cells to display to the client. The bombs positions are never sended to the user for obvious reasons.
