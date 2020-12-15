@@ -175,6 +175,22 @@ public class BoardTest {
         assertEquals(0, flag.getFlaggedPositions().size());
     }
 
+    @Test
+    public void winGameTest() {
+        Set<Coordinate> bombsPositions = new HashSet<>();
+        bombsPositions.add(new Coordinate(1, 1));
+        Board board = givingABoard(2, bombsPositions);
+
+        ClickResponse click = board.click(0, 0);
+        assertEquals(ClickResult.EMPTY_CELL, click.getClickResult());
+
+        click = board.click(0, 1);
+        assertEquals(ClickResult.EMPTY_CELL, click.getClickResult());
+
+        click = board.click(1, 0);
+        assertEquals(ClickResult.WIN, click.getClickResult());
+    }
+
     private Board givingABoard(int size, Set<Coordinate> bombsPositions) {
         return new Board(size, size, bombsPositions, new HashSet<>(), new HashSet<>());
     }

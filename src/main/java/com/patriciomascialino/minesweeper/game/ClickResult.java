@@ -5,5 +5,6 @@ public enum ClickResult {
     ALREADY_UNCOVERED,
     BOMB,
     FLAGGED,
-    UNFLAGGED
+    UNFLAGGED,
+    WIN
 }

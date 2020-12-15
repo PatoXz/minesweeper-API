@@ -52,6 +52,9 @@ public class Board {
             return createResponse(ClickResult.BOMB);
         }
         uncoverCell(x, y);
+        if (isGameFinished()) {
+            return createResponse(ClickResult.WIN);
+        }
         return createResponse(ClickResult.EMPTY_CELL);
     }
 
@@ -153,5 +156,9 @@ public class Board {
     private boolean isCellFlagged(int x, int y) {
         return this.flaggedPositions.stream()
                 .anyMatch(uncoveredPosition -> uncoveredPosition.getX() == x && uncoveredPosition.getY() == y);
+    }
+
+    private boolean isGameFinished() {
+        return this.uncoveredPositions.size() == (this.boardHeight * this.boardWidth) - this.bombsPositions.size();
     }
 }
