@@ -23,7 +23,7 @@ public class BoardTest {
     public void clickCellTwiceTest() {
         Set<Coordinate> bombsPositions = new HashSet<>();
         bombsPositions.add(new Coordinate(0, 0));
-        Board board = new Board(2, 2, bombsPositions, new HashSet<>());
+        Board board = givingABoard(2, bombsPositions);
 
         ClickResponse click = board.click(1, 1);
         assertEquals(ClickResult.EMPTY_CELL, click.getClickResult());
@@ -40,7 +40,7 @@ public class BoardTest {
     public void cellWithAdjacentBombTest() {
         Set<Coordinate> bombsPositions = new HashSet<>();
         bombsPositions.add(new Coordinate(1, 1));
-        Board board = new Board(10, 10, bombsPositions, new HashSet<>());
+        Board board = givingABoard(10, bombsPositions);
 
         ClickResponse click = board.click(2, 2);
         assertEquals(ClickResult.EMPTY_CELL, click.getClickResult());
@@ -54,7 +54,7 @@ public class BoardTest {
     public void cellWithNoAdjacentBombAndOneBombTest() {
         Set<Coordinate> bombsPositions = new HashSet<>();
         bombsPositions.add(new Coordinate(1, 1));
-        Board board = new Board(5, 5, bombsPositions, new HashSet<>());
+        Board board = givingABoard(5, bombsPositions);
 
         ClickResponse click = board.click(3, 3);
         assertEquals(ClickResult.EMPTY_CELL, click.getClickResult());
@@ -69,7 +69,7 @@ public class BoardTest {
         Set<Coordinate> bombsPositions = new HashSet<>();
         bombsPositions.add(new Coordinate(1, 1));
         bombsPositions.add(new Coordinate(4, 4));
-        Board board = new Board(5, 5, bombsPositions, new HashSet<>());
+        Board board = givingABoard(5, bombsPositions);
 
         ClickResponse click = board.click(0, 4);
         assertEquals(ClickResult.EMPTY_CELL, click.getClickResult());
@@ -82,7 +82,7 @@ public class BoardTest {
         Set<Coordinate> bombsPositions = new HashSet<>();
         bombsPositions.add(new Coordinate(1, 1));
         bombsPositions.add(new Coordinate(3, 3));
-        Board board = new Board(5, 5, bombsPositions, new HashSet<>());
+        Board board = givingABoard(5, bombsPositions);
 
         ClickResponse click = board.click(0, 4);
         assertEquals(ClickResult.EMPTY_CELL, click.getClickResult());
@@ -95,7 +95,7 @@ public class BoardTest {
         Set<Coordinate> bombsPositions = new HashSet<>();
         bombsPositions.add(new Coordinate(1, 1));
         bombsPositions.add(new Coordinate(3, 1));
-        Board board = new Board(5, 5, bombsPositions, new HashSet<>());
+        Board board = givingABoard(5, bombsPositions);
 
         ClickResponse click = board.click(0, 4);
         assertEquals(ClickResult.EMPTY_CELL, click.getClickResult());
@@ -109,11 +109,73 @@ public class BoardTest {
         bombsPositions.add(new Coordinate(1, 1));
         bombsPositions.add(new Coordinate(3, 1));
         bombsPositions.add(new Coordinate(2, 3));
-        Board board = new Board(5, 5, bombsPositions, new HashSet<>());
+        Board board = givingABoard(5, bombsPositions);
 
         ClickResponse click = board.click(0, 4);
         assertEquals(ClickResult.EMPTY_CELL, click.getClickResult());
 
         assertEquals(6, click.getUncoveredPositions().size());
+    }
+
+    @Test
+    public void clickFlaggedCellTest() {
+        Set<Coordinate> bombsPositions = new HashSet<>();
+        bombsPositions.add(new Coordinate(1, 1));
+        Board board = givingABoard(2, bombsPositions);
+
+        ClickResponse flag = board.flag(0, 0);
+        assertEquals(ClickResult.FLAGGED, flag.getClickResult());
+        assertEquals(1, flag.getFlaggedPositions().size());
+        assertEquals(0, flag.getUncoveredPositions().size());
+
+        ClickResponse click = board.click(0, 0);
+        assertEquals(ClickResult.FLAGGED, click.getClickResult());
+        assertEquals(1, click.getFlaggedPositions().size());
+        assertEquals(0, flag.getUncoveredPositions().size());
+    }
+
+    @Test
+    public void flagCellTest() {
+        Set<Coordinate> bombsPositions = new HashSet<>();
+        bombsPositions.add(new Coordinate(1, 1));
+        Board board = givingABoard(2, bombsPositions);
+
+        ClickResponse click = board.flag(0, 0);
+        assertEquals(ClickResult.FLAGGED, click.getClickResult());
+        assertEquals(1, click.getFlaggedPositions().size());
+    }
+
+    @Test
+    public void removeFlagCellTest() {
+        Set<Coordinate> bombsPositions = new HashSet<>();
+        bombsPositions.add(new Coordinate(1, 1));
+        Board board = givingABoard(2, bombsPositions);
+
+        ClickResponse flag = board.flag(0, 0);
+        assertEquals(ClickResult.FLAGGED, flag.getClickResult());
+        assertEquals(1, flag.getFlaggedPositions().size());
+
+        flag = board.flag(0, 0);
+        assertEquals(ClickResult.UNFLAGGED, flag.getClickResult());
+        assertEquals(0, flag.getFlaggedPositions().size());
+    }
+
+    @Test
+    public void flagUncoveredCellTest() {
+        Set<Coordinate> bombsPositions = new HashSet<>();
+        bombsPositions.add(new Coordinate(1, 1));
+        Board board = givingABoard(2, bombsPositions);
+
+        ClickResponse click = board.click(0, 0);
+        assertEquals(ClickResult.EMPTY_CELL, click.getClickResult());
+        assertEquals(0, click.getFlaggedPositions().size());
+
+        ClickResponse flag = board.flag(0, 0);
+        assertEquals(ClickResult.ALREADY_UNCOVERED, flag.getClickResult());
+        assertEquals(0, flag.getFlaggedPositions().size());
+    }
+
+    private Board givingABoard(int size, Set<Coordinate> bombsPositions) {
+        return new Board(size, size, bombsPositions, new HashSet<>(), new HashSet<>());
     }
 }

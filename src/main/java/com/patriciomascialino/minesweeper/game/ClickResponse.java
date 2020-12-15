@@ -7,11 +7,15 @@ import java.util.Set;
 
 @Getter
 public class ClickResponse {
-    private ClickResult clickResult;
-    private Set<Coordinate> uncoveredPositions;
+    private final ClickResult clickResult;
+    private final Set<Coordinate> uncoveredPositions;
+    private final Set<Coordinate> flaggedPositions;
 
-    public ClickResponse(ClickResult clickResult, Set<Coordinate> uncoveredPositions) {
+    public ClickResponse(final ClickResult clickResult,
+                         final Set<Coordinate> uncoveredPositions,
+                         final Set<Coordinate> flaggedPositions) {
         this.clickResult = clickResult;
         this.uncoveredPositions = uncoveredPositions;
+        this.flaggedPositions = flaggedPositions;
     }
 }

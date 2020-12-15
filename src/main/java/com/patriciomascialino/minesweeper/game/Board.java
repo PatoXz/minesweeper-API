@@ -14,6 +14,7 @@ public class Board {
     @Getter(AccessLevel.PROTECTED)
     private Set<Coordinate> bombsPositions;
     private Set<Coordinate> uncoveredPositions;
+    private Set<Coordinate> flaggedPositions;
 
     private Board(final int boardHeight, final int boardWidth) {
         this.boardHeight = boardHeight;
@@ -24,12 +25,53 @@ public class Board {
         this(boardHeight, boardWidth);
         setBombs(bombsCount);
         this.uncoveredPositions = new HashSet<>();
+        this.flaggedPositions = new HashSet<>();
     }
 
-    public Board(final int boardHeight, final int boardWidth, final Set<Coordinate> bombsPositions, Set<Coordinate> uncoveredPositions) {
+    public Board(final int boardHeight,
+                 final int boardWidth,
+                 final Set<Coordinate> bombsPositions,
+                 final Set<Coordinate> uncoveredPositions,
+                 final Set<Coordinate> flaggedPositions) {
         this(boardHeight, boardWidth);
         this.bombsPositions = bombsPositions;
         this.uncoveredPositions = uncoveredPositions;
+        this.flaggedPositions = flaggedPositions;
+    }
+
+    public ClickResponse click(int x, int y) {
+        log.info("Click {}, {}", x, y);
+        if (isCellUncovered(x, y)) {
+            return createResponse(ClickResult.ALREADY_UNCOVERED);
+        }
+        if (isCellFlagged(x, y)) {
+            return createResponse(ClickResult.FLAGGED);
+        }
+        if (isBombCell(x, y)) {
+            log.info("Bomb hit at ({}, {})", x, y);
+            return createResponse(ClickResult.BOMB);
+        }
+        uncoverCell(x, y);
+        return createResponse(ClickResult.EMPTY_CELL);
+    }
+
+    public ClickResponse flag(int x, int y) {
+        log.info("Click {}, {}", x, y);
+        if (isCellUncovered(x, y)) {
+            return createResponse(ClickResult.ALREADY_UNCOVERED);
+        }
+        if (isCellFlagged(x, y)) {
+            flaggedPositions.removeIf(flaggedPosition -> flaggedPosition.getX() == x && flaggedPosition.getY() == y);
+            return createResponse(ClickResult.UNFLAGGED);
+        }
+        else {
+            flaggedPositions.add(new Coordinate(x, y));
+            return createResponse(ClickResult.FLAGGED);
+        }
+    }
+
+    private ClickResponse createResponse(ClickResult clickResult) {
+        return new ClickResponse(clickResult, uncoveredPositions, flaggedPositions);
     }
 
     protected void setBombs(int bombsCount) {
@@ -41,20 +83,6 @@ public class Board {
             bombsPositions.add(new Coordinate(x, y));
         } while(bombsPositions.size() < bombsCount);
         this.bombsPositions = bombsPositions;
-    }
-
-    public ClickResponse click(int x, int y) {
-        log.info("Click {}, {}", x, y);
-        if (isCellUncovered(x, y)) {
-            return new ClickResponse(ClickResult.ALREADY_UNCOVERED, uncoveredPositions);
-        }
-        final boolean hitBomb = isBombCell(x, y);
-        if (hitBomb) {
-            log.info("Bomb hit at ({}, {})", x, y);
-            return new ClickResponse(ClickResult.BOMB, uncoveredPositions);
-        }
-        uncoverCell(x, y);
-        return new ClickResponse(ClickResult.EMPTY_CELL, uncoveredPositions);
     }
 
     private void uncoverCell(int x, int y) {
@@ -119,6 +147,11 @@ public class Board {
 
     private boolean isCellUncovered(int x, int y) {
         return this.uncoveredPositions.stream()
+                .anyMatch(uncoveredPosition -> uncoveredPosition.getX() == x && uncoveredPosition.getY() == y);
+    }
+
+    private boolean isCellFlagged(int x, int y) {
+        return this.flaggedPositions.stream()
                 .anyMatch(uncoveredPosition -> uncoveredPosition.getX() == x && uncoveredPosition.getY() == y);
     }
 }

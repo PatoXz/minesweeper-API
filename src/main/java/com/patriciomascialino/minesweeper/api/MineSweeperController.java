@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/minesweeper")
 public class MineSweeperController {
-    //crear partida
-    //guardar partida
-    //cargar partida
+    //startGame
+    //saveGame
+    //loadGame
     //click
-    //donde estan las bombas
+    //flag
 }
