@@ -53,8 +53,9 @@ public class GameServiceTest {
         when(gameRepository.save(any())).thenReturn(game);
         final Coordinate clickCoordinate = new Coordinate(0, 0);
         ClickResponse clickResponse = gameService.clickCell(gameId.toString(), clickCoordinate);
-        assertTrue(clickResponse.getGameResponse().getCells().isCellUncovered(clickCoordinate));
-        assertEquals(1, clickResponse.getGameResponse().getCells().countUncoveredPositions());
+        assertTrue(clickResponse.getGameResponse().getCells().getUncoveredPositions().stream()
+                .anyMatch(uncoveredPosition -> uncoveredPosition.equals(clickCoordinate)));
+        assertEquals(1, clickResponse.getGameResponse().getCells().getUncoveredPositions().size());
     }
 
     @Test
@@ -67,7 +68,8 @@ public class GameServiceTest {
         when(gameRepository.save(any())).thenReturn(game);
         final Coordinate clickCoordinate = new Coordinate(0, 0);
         ClickResponse clickResponse = gameService.flagCell(gameId.toString(), clickCoordinate);
-        assertTrue(clickResponse.getGameResponse().getCells().isCellFlagged(clickCoordinate));
+        assertTrue(clickResponse.getGameResponse().getCells().getFlaggedPositions().stream()
+                .anyMatch(flaggedPosition -> flaggedPosition.equals(clickCoordinate)));
         assertEquals(1, clickResponse.getGameResponse().getCells().getFlaggedPositions().size());
     }
 }

@@ -14,7 +14,7 @@ public class GameResponse {
     @JsonProperty("game_id")
     private String gameId;
     @JsonProperty("cells")
-    private Cells cells;
+    private CellsResponse cells;
     @JsonProperty("game_status")
     private GameStatus gameStatus;
 
@@ -23,7 +23,7 @@ public class GameResponse {
         gameResponse.gameId = game.getGameId().toString();
         gameResponse.boardProperties =
                 new BoardProperties(game.getBoardHeight(), game.getBoardWidth(), game.getBombsCount());
-        gameResponse.cells = game.getCells();
+        gameResponse.cells = CellsResponse.of(game);
         gameResponse.gameStatus = game.getGameStatus();
         return gameResponse;
     }

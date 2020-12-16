@@ -2,6 +2,7 @@ package com.patriciomascialino.minesweeper.service;
 
 import com.patriciomascialino.minesweeper.exception.GameNotFoundException;
 import com.patriciomascialino.minesweeper.api.response.ClickResponse;
+import com.patriciomascialino.minesweeper.exception.InvalidGameIdException;
 import com.patriciomascialino.minesweeper.model.ClickResult;
 import com.patriciomascialino.minesweeper.model.Coordinate;
 import com.patriciomascialino.minesweeper.model.Game;
@@ -26,6 +27,8 @@ public class GameService {
     }
 
     public Game loadGame(final String gameId) {
+        if (!ObjectId.isValid(gameId))
+            throw new InvalidGameIdException(gameId);
         return gameRepository.findById(new ObjectId(gameId))
                 .orElseThrow(() -> new GameNotFoundException(gameId));
     }

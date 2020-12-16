@@ -8,8 +8,8 @@ import java.util.Set;
 
 @Getter
 public class Cells {
-    private Set<Coordinate> uncoveredPositions;
-    private Set<Coordinate> flaggedPositions;
+    private final Set<Coordinate> uncoveredPositions;
+    private final Set<Coordinate> flaggedPositions;
 
     public Cells() {
         this.uncoveredPositions = new HashSet<>();
@@ -42,7 +42,7 @@ public class Cells {
 
     public boolean isCellFlagged(Coordinate coordinate) {
         return this.flaggedPositions.stream()
-                .anyMatch(uncoveredPosition -> uncoveredPosition.equals(coordinate));
+                .anyMatch(flaggedPosition -> flaggedPosition.equals(coordinate));
     }
 
     public int countUncoveredPositions() {
