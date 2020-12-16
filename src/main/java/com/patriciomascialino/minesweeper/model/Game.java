@@ -36,7 +36,7 @@ public class Game {
     }
 
     @PersistenceConstructor
-    protected Game(final ObjectId gameId,
+    public Game(final ObjectId gameId,
                    final int boardHeight,
                    final int boardWidth,
                    Bombs bombs,

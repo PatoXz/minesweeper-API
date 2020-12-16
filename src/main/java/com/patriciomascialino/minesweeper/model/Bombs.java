@@ -27,7 +27,7 @@ public class Bombs {
     }
 
     @PersistenceConstructor
-    protected Bombs(Set<Coordinate> bombsPositions) {
+    public Bombs(Set<Coordinate> bombsPositions) {
         this.bombsPositions = bombsPositions;
         this.bombsCount = bombsPositions.size();
     }
