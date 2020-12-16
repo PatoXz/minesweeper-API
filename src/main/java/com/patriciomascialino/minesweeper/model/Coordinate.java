@@ -1,4 +1,4 @@
-package com.patriciomascialino.minesweeper.game;
+package com.patriciomascialino.minesweeper.model;
 
 import com.patriciomascialino.minesweeper.exception.NotValidCoordinatesException;
 import lombok.Getter;

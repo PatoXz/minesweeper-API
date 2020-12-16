@@ -1,4 +1,4 @@
-package com.patriciomascialino.minesweeper.game;
+package com.patriciomascialino.minesweeper.model;
 
 public enum ClickResult {
     EMPTY_CELL,
@@ -6,5 +6,6 @@ public enum ClickResult {
     BOMB,
     FLAGGED,
     UNFLAGGED,
-    WIN
+    WIN,
+    GAME_ALREADY_FINISHED
 }

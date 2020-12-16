@@ -1,7 +1,9 @@
-package com.patriciomascialino.minesweeper.game;
+package com.patriciomascialino.minesweeper.model;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.annotation.Transient;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -10,7 +12,8 @@ import java.util.Set;
 public class Bombs {
     @Getter(AccessLevel.PROTECTED)
     private Set<Coordinate> bombsPositions;
-    private final int bombsCount;
+    @Transient
+    private int bombsCount;
 
     public Bombs(int boardWidth, int boardHeight, int bombsCount) {
         this.bombsCount = bombsCount;
@@ -23,9 +26,10 @@ public class Bombs {
         } while(this.bombsPositions.size() < bombsCount);
     }
 
-    public Bombs(Set<Coordinate> bombsPositions) {
-        this.bombsCount = bombsPositions.size();
+    @PersistenceConstructor
+    protected Bombs(Set<Coordinate> bombsPositions) {
         this.bombsPositions = bombsPositions;
+        this.bombsCount = bombsPositions.size();
     }
 
     public boolean isBombCell(Coordinate coordinate) {

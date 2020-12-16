@@ -1,6 +1,7 @@
-package com.patriciomascialino.minesweeper.game;
+package com.patriciomascialino.minesweeper.model;
 
 import lombok.Getter;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,13 +16,15 @@ public class Cells {
         this.flaggedPositions = new HashSet<>();
     }
 
-    public Cells(Set<Coordinate> uncoveredPositions, Set<Coordinate> flaggedPositions) {
+    @PersistenceConstructor
+    protected Cells(Set<Coordinate> uncoveredPositions, Set<Coordinate> flaggedPositions) {
         this.uncoveredPositions = uncoveredPositions;
         this.flaggedPositions = flaggedPositions;
     }
 
     public void uncoverCell(Coordinate coordinate) {
-        this.uncoveredPositions.add(coordinate);
+        if (!isCellFlagged(coordinate))
+            this.uncoveredPositions.add(coordinate);
     }
 
     public void flagCell(Coordinate coordinate) {
