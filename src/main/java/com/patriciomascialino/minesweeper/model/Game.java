@@ -18,8 +18,8 @@ public class Game {
     private ObjectId gameId;
     private final int boardHeight;
     private final int boardWidth;
-    @Getter(AccessLevel.PROTECTED)
     @Transient
+    @Getter(AccessLevel.PROTECTED)
     private final int cellsWithoutBombs;
     @Getter(AccessLevel.PROTECTED)
     private final Bombs bombs;
