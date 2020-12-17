@@ -5,8 +5,8 @@
 - [x] Detect when game is over
 - [x] Persistence
 - [x] Ability to start a new game and preserve/resume the old ones
-- [ ] Design and implement a documented RESTful API for the game (think of a mobile app for your API)
-- [ ] Time tracking
+- [x] Design and implement a documented RESTful API for the game (think of a mobile app for your API)
+- [x] Time tracking
 - [ ] Ability to support multiple users/accounts
 - [ ] Implement an API client library for the API designed above. Ideally, in a different language, of your preference, to the one used for the API
 

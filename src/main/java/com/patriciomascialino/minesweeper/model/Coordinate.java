@@ -2,7 +2,6 @@ package com.patriciomascialino.minesweeper.model;
 
 import com.patriciomascialino.minesweeper.exception.NotValidCoordinatesException;
 import lombok.Getter;
-import javax.validation.constraints.Min;
 
 import java.util.Objects;
 

@@ -3,11 +3,12 @@ package com.patriciomascialino.minesweeper.model;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest {
     @Test
@@ -39,9 +40,7 @@ public class GameTest {
 
     @Test
     public void cellWithAdjacentBombTest() {
-        Set<Coordinate> bombsPositions = new HashSet<>();
-        bombsPositions.add(new Coordinate(1, 1));
-        Game game = givingAGame(10, bombsPositions);
+        Game game = givingAGameWithABomb(10);
 
         final Coordinate coordinate = new Coordinate(2, 2);
         ClickResult clickResult = game.click(coordinate);
@@ -53,9 +52,7 @@ public class GameTest {
 
     @Test
     public void cellWithNoAdjacentBombAndOneBombTest() {
-        Set<Coordinate> bombsPositions = new HashSet<>();
-        bombsPositions.add(new Coordinate(1, 1));
-        Game game = givingAGame(5, bombsPositions);
+        Game game = givingAGameWithABomb(5);
 
         final Coordinate coordinate = new Coordinate(3, 3);
         ClickResult clickResult = game.click(coordinate);
@@ -125,9 +122,7 @@ public class GameTest {
 
     @Test
     public void clickFlaggedCellTest() {
-        Set<Coordinate> bombsPositions = new HashSet<>();
-        bombsPositions.add(new Coordinate(1, 1));
-        Game game = givingAGame(2, bombsPositions);
+        Game game = givingAGameWithABomb(2);
 
         final Coordinate coordinate = new Coordinate(0, 0);
 
@@ -140,9 +135,7 @@ public class GameTest {
 
     @Test
     public void flagCellTest() {
-        Set<Coordinate> bombsPositions = new HashSet<>();
-        bombsPositions.add(new Coordinate(1, 1));
-        Game game = givingAGame(2, bombsPositions);
+        Game game = givingAGameWithABomb(2);
 
         final Coordinate coordinate = new Coordinate(0, 0);
         ClickResult clickResult = game.flag(coordinate);
@@ -152,9 +145,7 @@ public class GameTest {
 
     @Test
     public void removeFlagCellTest() {
-        Set<Coordinate> bombsPositions = new HashSet<>();
-        bombsPositions.add(new Coordinate(1, 1));
-        Game game = givingAGame(2, bombsPositions);
+        Game game = givingAGameWithABomb(2);
 
         final Coordinate coordinate = new Coordinate(0, 0);
         ClickResult clickResult = game.flag(coordinate);
@@ -169,9 +160,7 @@ public class GameTest {
 
     @Test
     public void flagUncoveredCellTest() {
-        Set<Coordinate> bombsPositions = new HashSet<>();
-        bombsPositions.add(new Coordinate(1, 1));
-        Game game = givingAGame(2, bombsPositions);
+        Game game = givingAGameWithABomb(2);
 
         final Coordinate coordinate = new Coordinate(0, 0);
         ClickResult clickResult = game.click(coordinate);
@@ -185,9 +174,7 @@ public class GameTest {
 
     @Test
     public void winGameTest() {
-        Set<Coordinate> bombsPositions = new HashSet<>();
-        bombsPositions.add(new Coordinate(1, 1));
-        Game game = givingAGame(2, bombsPositions);
+        Game game = givingAGameWithABomb(2);
 
         ClickResult clickResult = game.click(new Coordinate(0, 0));
         assertEquals(ClickResult.EMPTY_CELL, clickResult);
@@ -202,9 +189,7 @@ public class GameTest {
 
     @Test
     public void lostGameTest() {
-        Set<Coordinate> bombsPositions = new HashSet<>();
-        bombsPositions.add(new Coordinate(1, 1));
-        Game game = givingAGame(2, bombsPositions);
+        Game game = givingAGameWithABomb(2);
 
         ClickResult clickResult = game.click(new Coordinate(1, 1));
         assertEquals(ClickResult.BOMB, clickResult);
@@ -213,18 +198,14 @@ public class GameTest {
 
     @Test
     public void bombCountTest() {
-        Set<Coordinate> bombsPositions = new HashSet<>();
-        bombsPositions.add(new Coordinate(1, 1));
-        Game game = givingAGame(2, bombsPositions);
+        Game game = givingAGameWithABomb(2);
         assertEquals(1, game.getBombsCount());
         assertEquals(1, game.getBombs().getBombsPositions().size());
     }
 
     @Test
     public void gameAlreadyFinishedOnClickTest() {
-        Set<Coordinate> bombsPositions = new HashSet<>();
-        bombsPositions.add(new Coordinate(1, 1));
-        Game game = givingAGame(2, bombsPositions);
+        Game game = givingAGameWithABomb(2);
         ClickResult click = game.click(new Coordinate(0, 0));
         assertEquals(ClickResult.EMPTY_CELL, click);
 
@@ -250,7 +231,8 @@ public class GameTest {
         uncoveredPositions.add(new Coordinate(0, 1));
 
         Game game = new Game(new ObjectId(), 2, 2,
-                new Bombs(bombsPositions), new Cells(uncoveredPositions, new HashSet<>()), GameStatus.PLAYING);
+                new Bombs(bombsPositions), new Cells(uncoveredPositions,
+                new HashSet<>()), GameStatus.PLAYING, ZonedDateTime.now(ZoneOffset.UTC).toInstant());
 
         ClickResult click = game.click(new Coordinate(1, 0));
         assertEquals(ClickResult.WIN, click);
@@ -262,9 +244,7 @@ public class GameTest {
 
     @Test
     public void clickOnFlaggedCellReturnsFlaggedCellTest() {
-        Set<Coordinate> bombsPositions = new HashSet<>();
-        bombsPositions.add(new Coordinate(1, 1));
-        Game game = givingAGame(2, bombsPositions);
+        Game game = givingAGameWithABomb(2);
         ClickResult click = game.flag(new Coordinate(0, 0));
         assertEquals(ClickResult.FLAGGED, click);
 
@@ -277,14 +257,35 @@ public class GameTest {
         Set<Coordinate> bombsPositions = new HashSet<>();
         bombsPositions.add(new Coordinate(1, 1));
         final ObjectId gameId = new ObjectId();
-        Game game = new Game(gameId, 3, 2, new Bombs(bombsPositions), new Cells(), GameStatus.PLAYING);
+        Game game = new Game(gameId, 3, 2, new Bombs(bombsPositions),
+                new Cells(), GameStatus.PLAYING, ZonedDateTime.now(ZoneOffset.UTC).toInstant());
         assertEquals(3, game.getBoardHeight());
         assertEquals(2, game.getBoardWidth());
         assertEquals(gameId.toString(), game.getGameId().toString());
         assertEquals(5, game.getCellsWithoutBombs());
     }
 
+    @Test
+    public void gameStartedAtWithExistingGameTest() {
+        Game game = givingAGameWithABomb(2);
+        assertNotNull(game.getGameStartedAt());
+        assertEquals(ZonedDateTime.parse("2020-12-16T00:00:00Z"), game.getGameStartedAt());
+    }
+
+    @Test
+    public void gameStartedAtWithNewGameTest() {
+        Game game = new Game(2, 2, 1);
+        assertNotNull(game.getGameStartedAt());
+    }
+
+    private Game givingAGameWithABomb(int size) {
+        Set<Coordinate> bombsPositions = new HashSet<>();
+        bombsPositions.add(new Coordinate(1, 1));
+        return givingAGame(size, bombsPositions);
+    }
+
     private Game givingAGame(int size, Set<Coordinate> bombsPositions) {
-        return new Game(new ObjectId(), size, size, new Bombs(bombsPositions), new Cells(), GameStatus.PLAYING);
+        return new Game(new ObjectId(), size, size, new Bombs(bombsPositions),
+                new Cells(), GameStatus.PLAYING, ZonedDateTime.parse("2020-12-16T00:00:00Z").toInstant());
     }
 }

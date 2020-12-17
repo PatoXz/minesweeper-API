@@ -10,6 +10,10 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+
 @Document(collection = "games")
 @Getter
 @Slf4j
@@ -25,6 +29,8 @@ public class Game {
     private final Bombs bombs;
     private final Cells cells;
     private GameStatus gameStatus;
+    private final Instant gameStartedAt;
+    private Instant gameFinishedAt;
 
     public Game(final int boardHeight, final int boardWidth, final int bombsCount) {
         this.boardHeight = boardHeight;
@@ -33,15 +39,17 @@ public class Game {
         this.cells = new Cells();
         this.cellsWithoutBombs = boardWidth * boardHeight - this.bombs.count();
         this.gameStatus = GameStatus.PLAYING;
+        this.gameStartedAt = ZonedDateTime.now(ZoneOffset.UTC).toInstant();
     }
 
     @PersistenceConstructor
     public Game(final ObjectId gameId,
-                   final int boardHeight,
-                   final int boardWidth,
-                   Bombs bombs,
-                   Cells cells,
-                   GameStatus gameStatus) {
+                final int boardHeight,
+                final int boardWidth,
+                Bombs bombs,
+                Cells cells,
+                GameStatus gameStatus,
+                Instant gameStartedAt) {
         this.gameId = gameId;
         this.boardHeight = boardHeight;
         this.boardWidth = boardWidth;
@@ -49,6 +57,7 @@ public class Game {
         this.cells = cells;
         this.cellsWithoutBombs = boardWidth * boardHeight - this.bombs.count();
         this.gameStatus = gameStatus;
+        this.gameStartedAt = gameStartedAt;
     }
 
     public ClickResult click(Coordinate coordinate) {
@@ -63,11 +72,13 @@ public class Game {
         }
         if (bombs.isBombCell(coordinate)) {
             log.info("Bomb hit at {}", coordinate);
+            this.gameFinishedAt = ZonedDateTime.now(ZoneOffset.UTC).toInstant();
             this.gameStatus = GameStatus.LOST;
             return ClickResult.BOMB;
         }
         uncoverCells(coordinate);
         if (isGameFinished()) {
+            this.gameFinishedAt = ZonedDateTime.now(ZoneOffset.UTC).toInstant();
             this.gameStatus = GameStatus.WON;
             return ClickResult.WIN;
         }
@@ -152,5 +163,16 @@ public class Game {
 
     public int getBombsCount() {
         return this.bombs.count();
+    }
+
+    public ZonedDateTime getGameStartedAt() {
+        return ZonedDateTime.ofInstant(gameStartedAt, ZoneOffset.UTC);
+    }
+
+    public ZonedDateTime getGameFinishedAt() {
+        if (gameFinishedAt != null) {
+            return ZonedDateTime.ofInstant(gameFinishedAt, ZoneOffset.UTC);
+        }
+        return null;
     }
 }

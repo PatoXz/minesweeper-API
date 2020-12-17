@@ -2,12 +2,15 @@ package com.patriciomascialino.minesweeper.service;
 
 import com.patriciomascialino.minesweeper.api.response.ClickResponse;
 import com.patriciomascialino.minesweeper.exception.GameNotFoundException;
+import com.patriciomascialino.minesweeper.exception.InvalidGameIdException;
 import com.patriciomascialino.minesweeper.model.*;
 import com.patriciomascialino.minesweeper.repository.GameRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -44,11 +47,22 @@ public class GameServiceTest {
     }
 
     @Test
+    public void loadGameTest() {
+        Game game = new Game(2, 2, 1);
+        when(gameRepository.save(any())).thenReturn(game);
+        Game gameOfService = gameService.newGame(2, 2, 1);
+        assertEquals(game.getBoardHeight(), gameOfService.getBoardHeight());
+        assertEquals(game.getBoardWidth(), gameOfService.getBoardWidth());
+        assertEquals(game.getBombsCount(), gameOfService.getBombsCount());
+    }
+
+    @Test
     public void clickCellTest() {
         Set<Coordinate> bombsPositions = new HashSet<>();
         bombsPositions.add(new Coordinate(1, 1));
         final ObjectId gameId = new ObjectId();
-        Game game = new Game(gameId, 2, 2, new Bombs(bombsPositions), new Cells(), GameStatus.PLAYING);
+        Game game = new Game(gameId, 2, 2, new Bombs(bombsPositions),
+                new Cells(), GameStatus.PLAYING, ZonedDateTime.now(ZoneOffset.UTC).toInstant());
         when(gameRepository.findById(gameId)).thenReturn(Optional.of(game));
         when(gameRepository.save(any())).thenReturn(game);
         final Coordinate clickCoordinate = new Coordinate(0, 0);
@@ -63,7 +77,8 @@ public class GameServiceTest {
         Set<Coordinate> bombsPositions = new HashSet<>();
         bombsPositions.add(new Coordinate(1, 1));
         final ObjectId gameId = new ObjectId();
-        Game game = new Game(gameId, 2, 2, new Bombs(bombsPositions), new Cells(), GameStatus.PLAYING);
+        Game game = new Game(gameId, 2, 2, new Bombs(bombsPositions),
+                new Cells(), GameStatus.PLAYING, ZonedDateTime.now(ZoneOffset.UTC).toInstant());
         when(gameRepository.findById(gameId)).thenReturn(Optional.of(game));
         when(gameRepository.save(any())).thenReturn(game);
         final Coordinate clickCoordinate = new Coordinate(0, 0);
@@ -71,5 +86,11 @@ public class GameServiceTest {
         assertTrue(clickResponse.getGameResponse().getCells().getFlaggedPositions().stream()
                 .anyMatch(flaggedPosition -> flaggedPosition.equals(clickCoordinate)));
         assertEquals(1, clickResponse.getGameResponse().getCells().getFlaggedPositions().size());
+    }
+
+    @Test
+    public void throwExceptionWhenInvalidGameId() {
+        final InvalidGameIdException exception = assertThrows(InvalidGameIdException.class, () -> gameService.loadGame("invalidGameId"));
+        assertEquals("Invalid game id format. Received: invalidGameId", exception.getMessage());
     }
 }

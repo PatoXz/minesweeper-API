@@ -34,8 +34,7 @@ public class Bombs {
 
     public boolean isBombCell(Coordinate coordinate) {
         return this.bombsPositions.stream()
-                .anyMatch(bombPosition -> bombPosition.getX() == coordinate.getX()
-                        && bombPosition.getY() == coordinate.getY());
+                .anyMatch(bombPosition -> bombPosition.equals(coordinate));
     }
 
     public int count() {
