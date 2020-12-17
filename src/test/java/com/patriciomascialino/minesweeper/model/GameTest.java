@@ -1,5 +1,6 @@
 package com.patriciomascialino.minesweeper.model;
 
+import com.patriciomascialino.minesweeper.exception.NotEnoughFreeCellsOnBoardException;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 
@@ -278,6 +279,24 @@ public class GameTest {
     public void gameStartedAtWithNewGameTest() {
         Game game = new Game(2, 2, 1, new ObjectId());
         assertNotNull(game.getGameStartedAt());
+    }
+
+    @Test
+    public void newGameWithMoreBombsThanCellsThrowExceptionTest() {
+        final NotEnoughFreeCellsOnBoardException exception =
+                assertThrows(NotEnoughFreeCellsOnBoardException.class,
+                        () -> new Game(2, 2, 5, new ObjectId()));
+        assertEquals(String.format("There wasn't enough free cells on the game. It should be at least one. " +
+                "Cells on board %s, bombs to set: %s", 4, 5), exception.getMessage());
+    }
+
+    @Test
+    public void newGameWithSameAmountOfBombsAsCellsThrowExceptionTest() {
+        final NotEnoughFreeCellsOnBoardException exception =
+                assertThrows(NotEnoughFreeCellsOnBoardException.class,
+                        () -> new Game(2, 2, 4, new ObjectId()));
+        assertEquals(String.format("There wasn't enough free cells on the game. It should be at least one. " +
+                "Cells on board %s, bombs to set: %s", 4, 4), exception.getMessage());
     }
 
     private Game givingAGameWithABomb(int size) {

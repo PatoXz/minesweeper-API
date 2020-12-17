@@ -21,12 +21,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleFirstShotNotFound(UserNotFoundException ex) {
+    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(InvalidUserIdException.class)
-    public ResponseEntity<String> handleFirstShotNotFound(InvalidUserIdException ex) {
+    public ResponseEntity<String> handleInvalidUserIdException(InvalidUserIdException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

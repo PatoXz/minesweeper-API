@@ -1,6 +1,7 @@
 package com.patriciomascialino.minesweeper.model;
 
 import com.patriciomascialino.minesweeper.exception.BombFoundedException;
+import com.patriciomascialino.minesweeper.exception.NotEnoughFreeCellsOnBoardException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +32,11 @@ public class Game {
     private GameStatus gameStatus;
     private final Instant gameStartedAt;
     private Instant gameFinishedAt;
-    private ObjectId userID;
+    private final ObjectId userID;
 
     public Game(final int boardHeight, final int boardWidth, final int bombsCount, ObjectId userID) {
+        if (boardWidth * boardHeight <= bombsCount)
+            throw new NotEnoughFreeCellsOnBoardException(boardWidth * boardHeight, bombsCount);
         this.boardHeight = boardHeight;
         this.boardWidth = boardWidth;
         this.bombs = new Bombs(boardWidth, boardHeight, bombsCount);

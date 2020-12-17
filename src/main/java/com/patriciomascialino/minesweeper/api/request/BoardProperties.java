@@ -1,5 +1,6 @@
 package com.patriciomascialino.minesweeper.api.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiParam;
 import lombok.*;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Min;
 
 @AllArgsConstructor
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
 public class BoardProperties {
     @ApiParam(value = "The amount of rows that the board should have")

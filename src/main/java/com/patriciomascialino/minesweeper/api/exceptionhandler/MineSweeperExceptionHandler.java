@@ -3,6 +3,7 @@ package com.patriciomascialino.minesweeper.api.exceptionhandler;
 import com.patriciomascialino.minesweeper.api.MineSweeperController;
 import com.patriciomascialino.minesweeper.exception.GameNotFoundException;
 import com.patriciomascialino.minesweeper.exception.InvalidGameIdException;
+import com.patriciomascialino.minesweeper.exception.NotEnoughFreeCellsOnBoardException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -21,12 +22,17 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MineSweeperExceptionHandler {
     @ExceptionHandler(GameNotFoundException.class)
-    public ResponseEntity<String> handleFirstShotNotFound(GameNotFoundException ex) {
+    public ResponseEntity<String> handleGameNotFoundExceptionFound(GameNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(InvalidGameIdException.class)
-    public ResponseEntity<String> handleFirstShotNotFound(InvalidGameIdException ex) {
+    public ResponseEntity<String> handleInvalidGameIdException(InvalidGameIdException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotEnoughFreeCellsOnBoardException.class)
+    public ResponseEntity<String> handleNotEnoughFreeCellsOnBoardException(NotEnoughFreeCellsOnBoardException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
