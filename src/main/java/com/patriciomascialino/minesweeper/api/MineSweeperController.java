@@ -34,12 +34,15 @@ public class MineSweeperController {
     @ApiResponses({@ApiResponse(code = 200, message = "Game created", response = GameResponse.class)})
     @PostMapping
     public ResponseEntity<GameResponse> newGame(
+            @RequestHeader("user_id") @ApiParam(value = "The user id owner of the game to be created") @Valid @NotBlank
+            final String userId,
             @RequestBody @Valid final BoardProperties boardProperties) {
         log.info("New game request {}", boardProperties);
         final Game game = gameService.newGame(
                 boardProperties.getBoardHeight(),
                 boardProperties.getBoardWidth(),
-                boardProperties.getBombsCount());
+                boardProperties.getBombsCount(),
+                userId);
         return ResponseEntity.ok(GameResponse.of(game));
     }
 
@@ -50,10 +53,12 @@ public class MineSweeperController {
     })
     @GetMapping("/{gameId}")
     public ResponseEntity<GameResponse> loadGame(
+            @RequestHeader("user_id") @ApiParam(value = "The user id owner of the game") @Valid @NotBlank
+            final String userId,
             @PathVariable("gameId") @ApiParam(value = "The game to look for") @Valid @NotBlank
             final String gameId) {
         log.info("Load game request. GameId: {}", gameId);
-        final Game game = gameService.loadGame(gameId);
+        final Game game = gameService.loadGame(gameId, userId);
         return ResponseEntity.ok(GameResponse.of(game));
     }
 
@@ -75,11 +80,13 @@ public class MineSweeperController {
 
     @PostMapping("/{gameId}/click")
     public ResponseEntity<ClickResponse> clickCell(
+            @RequestHeader("user_id") @ApiParam(value = "The user id owner of the game") @Valid @NotBlank
+            final String userId,
             @PathVariable("gameId") @ApiParam(value = "The game to perform the action") @Valid @NotBlank
             final String gameId,
             @RequestBody @Valid final ClickRequest clickRequest) {
         log.info("ClickCell request. GameId: {}, clickRequest: {}", gameId, clickRequest);
-        final ClickResponse clickResponse = gameService.clickCell(gameId, clickRequest.toCoordinate());
+        final ClickResponse clickResponse = gameService.clickCell(gameId, clickRequest.toCoordinate(), userId);
         return ResponseEntity.ok(clickResponse);
     }
 
@@ -100,11 +107,13 @@ public class MineSweeperController {
     })
     @PostMapping("/{gameId}/flag")
     public ResponseEntity<ClickResponse> flagCell(
+            @RequestHeader("user_id") @ApiParam(value = "The user id owner of the game") @Valid @NotBlank
+            final String userId,
             @PathVariable("gameId") @ApiParam(value = "The game to perform the action") @Valid @NotBlank
             final String gameId,
             @RequestBody @Valid final ClickRequest clickRequest) {
         log.info("FlagCell request. GameId: {}, clickRequest: {}", gameId, clickRequest);
-        final ClickResponse clickResponse = gameService.flagCell(gameId, clickRequest.toCoordinate());
+        final ClickResponse clickResponse = gameService.flagCell(gameId, clickRequest.toCoordinate(), userId);
         return ResponseEntity.ok(clickResponse);
     }
 }

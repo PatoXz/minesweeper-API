@@ -63,7 +63,8 @@ public class ClickResponseTest {
         bombsPositions.add(new Coordinate(1, 1));
 
         Game game = new Game(gameId, 2, 3,
-                new Bombs(bombsPositions), new Cells(), GameStatus.PLAYING, ZonedDateTime.parse("2020-12-16T00:00:00Z").toInstant());
+                new Bombs(bombsPositions), new Cells(), GameStatus.PLAYING,
+                ZonedDateTime.parse("2020-12-16T00:00:00Z").toInstant(), new ObjectId());
         game.click(new Coordinate(0, 0));
         game.flag(new Coordinate(1, 0));
         return game;

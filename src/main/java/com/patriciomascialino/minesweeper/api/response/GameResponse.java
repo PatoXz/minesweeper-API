@@ -14,6 +14,8 @@ import java.time.ZonedDateTime;
 public class GameResponse {
     @JsonProperty("board_properties")
     private BoardProperties boardProperties;
+    @JsonProperty("user_id")
+    private String userId;
     @JsonProperty("game_id")
     private String gameId;
     @JsonProperty("cells")
@@ -27,7 +29,8 @@ public class GameResponse {
 
     public static GameResponse of(Game game) {
         GameResponse gameResponse = new GameResponse();
-        gameResponse.gameId = game.getGameId().toString();
+        gameResponse.userId = game.getUserID().toString();
+        gameResponse.gameId = game.getId().toString();
         gameResponse.boardProperties =
                 new BoardProperties(game.getBoardHeight(), game.getBoardWidth(), game.getBombsCount());
         gameResponse.cells = CellsResponse.of(game);

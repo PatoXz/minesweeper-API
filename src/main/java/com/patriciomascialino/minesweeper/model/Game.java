@@ -19,7 +19,7 @@ import java.time.ZonedDateTime;
 @Slf4j
 public class Game {
     @Id
-    private ObjectId gameId;
+    private ObjectId id;
     private final int boardHeight;
     private final int boardWidth;
     @Transient
@@ -31,8 +31,9 @@ public class Game {
     private GameStatus gameStatus;
     private final Instant gameStartedAt;
     private Instant gameFinishedAt;
+    private ObjectId userID;
 
-    public Game(final int boardHeight, final int boardWidth, final int bombsCount) {
+    public Game(final int boardHeight, final int boardWidth, final int bombsCount, ObjectId userID) {
         this.boardHeight = boardHeight;
         this.boardWidth = boardWidth;
         this.bombs = new Bombs(boardWidth, boardHeight, bombsCount);
@@ -40,17 +41,19 @@ public class Game {
         this.cellsWithoutBombs = boardWidth * boardHeight - this.bombs.count();
         this.gameStatus = GameStatus.PLAYING;
         this.gameStartedAt = ZonedDateTime.now(ZoneOffset.UTC).toInstant();
+        this.userID = userID;
     }
 
     @PersistenceConstructor
-    public Game(final ObjectId gameId,
+    public Game(final ObjectId id,
                 final int boardHeight,
                 final int boardWidth,
                 Bombs bombs,
                 Cells cells,
                 GameStatus gameStatus,
-                Instant gameStartedAt) {
-        this.gameId = gameId;
+                Instant gameStartedAt,
+                ObjectId userID) {
+        this.id = id;
         this.boardHeight = boardHeight;
         this.boardWidth = boardWidth;
         this.bombs = bombs;
@@ -58,6 +61,7 @@ public class Game {
         this.cellsWithoutBombs = boardWidth * boardHeight - this.bombs.count();
         this.gameStatus = gameStatus;
         this.gameStartedAt = gameStartedAt;
+        this.userID = userID;
     }
 
     public ClickResult click(Coordinate coordinate) {

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameTest {
     @Test
     public void bombHitTest() {
-        Game game = new Game(10, 10, 1);
+        Game game = new Game(10, 10, 1, new ObjectId());
         final Coordinate first = game.getBombs().getBombsPositions().stream().findFirst().orElseThrow(RuntimeException::new);
 
         ClickResult clickResult = game.click(first);
@@ -232,7 +232,7 @@ public class GameTest {
 
         Game game = new Game(new ObjectId(), 2, 2,
                 new Bombs(bombsPositions), new Cells(uncoveredPositions,
-                new HashSet<>()), GameStatus.PLAYING, ZonedDateTime.now(ZoneOffset.UTC).toInstant());
+                new HashSet<>()), GameStatus.PLAYING, ZonedDateTime.now(ZoneOffset.UTC).toInstant(), new ObjectId());
 
         ClickResult click = game.click(new Coordinate(1, 0));
         assertEquals(ClickResult.WIN, click);
@@ -257,12 +257,14 @@ public class GameTest {
         Set<Coordinate> bombsPositions = new HashSet<>();
         bombsPositions.add(new Coordinate(1, 1));
         final ObjectId gameId = new ObjectId();
+        final ObjectId userId = new ObjectId();
         Game game = new Game(gameId, 3, 2, new Bombs(bombsPositions),
-                new Cells(), GameStatus.PLAYING, ZonedDateTime.now(ZoneOffset.UTC).toInstant());
+                new Cells(), GameStatus.PLAYING, ZonedDateTime.now(ZoneOffset.UTC).toInstant(), userId);
         assertEquals(3, game.getBoardHeight());
         assertEquals(2, game.getBoardWidth());
-        assertEquals(gameId.toString(), game.getGameId().toString());
+        assertEquals(gameId.toString(), game.getId().toString());
         assertEquals(5, game.getCellsWithoutBombs());
+        assertEquals(userId.toString(), game.getUserID().toString());
     }
 
     @Test
@@ -274,7 +276,7 @@ public class GameTest {
 
     @Test
     public void gameStartedAtWithNewGameTest() {
-        Game game = new Game(2, 2, 1);
+        Game game = new Game(2, 2, 1, new ObjectId());
         assertNotNull(game.getGameStartedAt());
     }
 
@@ -286,6 +288,7 @@ public class GameTest {
 
     private Game givingAGame(int size, Set<Coordinate> bombsPositions) {
         return new Game(new ObjectId(), size, size, new Bombs(bombsPositions),
-                new Cells(), GameStatus.PLAYING, ZonedDateTime.parse("2020-12-16T00:00:00Z").toInstant());
+                new Cells(), GameStatus.PLAYING, ZonedDateTime.parse("2020-12-16T00:00:00Z").toInstant(),
+                new ObjectId());
     }
 }
