@@ -132,3 +132,8 @@ Also, there's another endpoint to get an existing user with its ID
 User API endpoints:
 - POST to /user: will create a new user.
 - GET to /user/{userId}: will try to get an existing user.
+
+## Sixth part - Integration tests
+To finish with this proyect, I decided to reach a 100% coverage. To do that, I had to use Integration tests with rest 
+assure and embebed mongo.\
+![picCoverage](docs/PicCoverage.png) 
