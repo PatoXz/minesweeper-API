@@ -4,7 +4,6 @@ import com.patriciomascialino.minesweeper.api.response.ClickResponse;
 import com.patriciomascialino.minesweeper.api.response.ErrorResponse;
 import com.patriciomascialino.minesweeper.api.response.GameResponse;
 import com.patriciomascialino.minesweeper.api.response.UserResponse;
-import com.patriciomascialino.minesweeper.exception.NotEnoughFreeCellsOnBoardException;
 import com.patriciomascialino.minesweeper.model.ClickResult;
 import io.restassured.http.ContentType;
 import org.bson.types.ObjectId;
@@ -47,7 +46,23 @@ public class MineSweeperControllerTest {
                 .post("/minesweeper")
                 .body().as(ErrorResponse.class);
         assertEquals("There wasn't enough free cells on the game. It should be at least one. " +
-        "Cells on board 4, bombs to set: 5", errorResponse.getErrorMessage());
+                "Cells on board 4, bombs to set: 5", errorResponse.getErrorMessage());
+    }
+
+    @Test
+    public void tryToCreateGameWithNonExistentUserAPITest() {
+        Map<String, Object> jsonAsMap = new HashMap<>();
+        jsonAsMap.put("board_height", "2");
+        jsonAsMap.put("board_width", "2");
+        jsonAsMap.put("bombs_count", "5");
+        final ObjectId randomUserId = new ObjectId();
+        final ErrorResponse errorResponse = given().port(port)
+                .contentType(ContentType.JSON)
+                .header("user_id", randomUserId.toString())
+                .body(jsonAsMap)
+                .post("/minesweeper")
+                .body().as(ErrorResponse.class);
+        assertEquals("User not found. ID " + randomUserId, errorResponse.getErrorMessage());
     }
 
     @Test

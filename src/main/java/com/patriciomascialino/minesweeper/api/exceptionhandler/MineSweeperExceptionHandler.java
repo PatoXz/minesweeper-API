@@ -25,6 +25,11 @@ public class MineSweeperExceptionHandler {
         return new ResponseEntity<>(new ErrorResponse(ex), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
+        return new ResponseEntity<>(new ErrorResponse(ex), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(InvalidGameIdException.class)
     public ResponseEntity<ErrorResponse> handleInvalidGameIdException(InvalidGameIdException ex) {
         return new ResponseEntity<>(new ErrorResponse(ex), HttpStatus.BAD_REQUEST);
