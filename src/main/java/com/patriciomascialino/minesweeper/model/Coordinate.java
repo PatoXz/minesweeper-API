@@ -1,6 +1,6 @@
 package com.patriciomascialino.minesweeper.model;
 
-import com.patriciomascialino.minesweeper.exception.NotValidCoordinatesException;
+import com.patriciomascialino.minesweeper.exception.InvalidCoordinatesException;
 import lombok.Getter;
 
 import java.util.Objects;
@@ -12,7 +12,7 @@ public class Coordinate {
 
     public Coordinate(final int x, final int y) {
         if (x < 0 || y < 0) {
-            throw new NotValidCoordinatesException(x, y);
+            throw new InvalidCoordinatesException(x, y);
         }
         this.x = x;
         this.y = y;

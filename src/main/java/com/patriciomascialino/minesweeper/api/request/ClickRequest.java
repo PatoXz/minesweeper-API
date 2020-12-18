@@ -3,13 +3,11 @@ package com.patriciomascialino.minesweeper.api.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.patriciomascialino.minesweeper.model.Coordinate;
 import io.swagger.annotations.ApiParam;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 
-@AllArgsConstructor
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor

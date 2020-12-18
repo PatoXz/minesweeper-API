@@ -3,6 +3,7 @@ package com.patriciomascialino.minesweeper.api;
 import com.patriciomascialino.minesweeper.api.request.BoardProperties;
 import com.patriciomascialino.minesweeper.api.request.ClickRequest;
 import com.patriciomascialino.minesweeper.api.response.ClickResponse;
+import com.patriciomascialino.minesweeper.api.response.ErrorResponse;
 import com.patriciomascialino.minesweeper.api.response.GameResponse;
 import com.patriciomascialino.minesweeper.model.Game;
 import com.patriciomascialino.minesweeper.service.GameService;
@@ -31,7 +32,10 @@ public class MineSweeperController {
     }
 
     @ApiOperation(value = "Start a new game with the properties sent", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiResponses({@ApiResponse(code = 200, message = "Game created", response = GameResponse.class)})
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Game created", response = GameResponse.class),
+            @ApiResponse(code = 404, message = "User not found", response = ErrorResponse.class)
+    })
     @PostMapping
     public ResponseEntity<GameResponse> newGame(
             @RequestHeader("user_id") @ApiParam(value = "The user id owner of the game to be created") @Valid @NotBlank
@@ -49,7 +53,7 @@ public class MineSweeperController {
     @ApiOperation(value = "Load an existing game by its ID", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses({
         @ApiResponse(code = 200, message = "Game found", response = GameResponse.class),
-        @ApiResponse(code = 404, message = "Game not found", response = String.class)
+        @ApiResponse(code = 404, message = "Game not found", response = ErrorResponse.class)
     })
     @GetMapping("/{gameId}")
     public ResponseEntity<GameResponse> loadGame(
@@ -75,7 +79,7 @@ public class MineSweeperController {
             @ApiResponse(
                     code = 404,
                     message = "Game not found",
-                    response = String.class)
+                    response = ErrorResponse.class)
     })
 
     @PostMapping("/{gameId}/click")
@@ -103,7 +107,7 @@ public class MineSweeperController {
             @ApiResponse(
                     code = 404,
                     message = "Game not found",
-                    response = String.class)
+                    response = ErrorResponse.class)
     })
     @PostMapping("/{gameId}/flag")
     public ResponseEntity<ClickResponse> flagCell(

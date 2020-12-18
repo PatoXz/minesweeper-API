@@ -1,5 +1,6 @@
 package com.patriciomascialino.minesweeper.api.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.patriciomascialino.minesweeper.model.Coordinate;
 import com.patriciomascialino.minesweeper.model.Game;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CellsResponse {
     @JsonProperty("uncovered_positions")
     private final Set<Coordinate> uncoveredPositions;

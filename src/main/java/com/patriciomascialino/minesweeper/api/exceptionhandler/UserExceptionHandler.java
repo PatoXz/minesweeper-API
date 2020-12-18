@@ -1,6 +1,7 @@
 package com.patriciomascialino.minesweeper.api.exceptionhandler;
 
 import com.patriciomascialino.minesweeper.api.UserController;
+import com.patriciomascialino.minesweeper.api.response.ErrorResponse;
 import com.patriciomascialino.minesweeper.exception.InvalidUserIdException;
 import com.patriciomascialino.minesweeper.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -21,21 +22,21 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
+        return new ResponseEntity<>(new ErrorResponse(ex), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(InvalidUserIdException.class)
-    public ResponseEntity<String> handleInvalidUserIdException(InvalidUserIdException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleInvalidUserIdException(InvalidUserIdException ex) {
+        return new ResponseEntity<>(new ErrorResponse(ex), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
         String errorMessage = result.getFieldErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining("\n"));
-        return ResponseEntity.badRequest().body(errorMessage);
+        return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
     }
 }

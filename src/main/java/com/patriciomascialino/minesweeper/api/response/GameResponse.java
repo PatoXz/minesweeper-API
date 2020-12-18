@@ -6,10 +6,14 @@ import com.patriciomascialino.minesweeper.api.request.BoardProperties;
 import com.patriciomascialino.minesweeper.model.Game;
 import com.patriciomascialino.minesweeper.model.GameStatus;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
+@NoArgsConstructor
 @Getter
+@Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GameResponse {
     @JsonProperty("board_properties")

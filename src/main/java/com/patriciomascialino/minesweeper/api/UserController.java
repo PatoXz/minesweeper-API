@@ -1,6 +1,7 @@
 package com.patriciomascialino.minesweeper.api;
 
 import com.patriciomascialino.minesweeper.api.request.UserRequest;
+import com.patriciomascialino.minesweeper.api.response.ErrorResponse;
 import com.patriciomascialino.minesweeper.api.response.UserResponse;
 import com.patriciomascialino.minesweeper.model.User;
 import com.patriciomascialino.minesweeper.service.UserService;
@@ -41,7 +42,7 @@ public class UserController {
     @ApiOperation(value = "Get an existing user by its id", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses({
         @ApiResponse(code = 200, message = "User found", response = User.class),
-        @ApiResponse(code = 404, message = "User not found", response = String.class)
+        @ApiResponse(code = 404, message = "User not found", response = ErrorResponse.class)
     })
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponse> getUser(

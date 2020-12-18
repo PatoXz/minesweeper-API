@@ -1,4 +1,23 @@
 spring:
+  profiles:
+    active: prod
+
+---
+
+spring:
   data:
     mongodb:
       uri: ${DB_URI}
+  config:
+    activate:
+      on-profile: prod
+
+---
+
+spring:
+  data:
+    mongodb:
+      database: user_db
+  config:
+    activate:
+      on-profile: test

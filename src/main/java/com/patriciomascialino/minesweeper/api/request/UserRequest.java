@@ -14,6 +14,6 @@ import javax.validation.constraints.NotBlank;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRequest {
     @ApiParam(value = "Name of the user")
-    @NotBlank
+    @NotBlank(message = "The name of the user shouldn't be empty")
     private String name;
 }

@@ -1,6 +1,6 @@
 package com.patriciomascialino.minesweeper.model;
 
-import com.patriciomascialino.minesweeper.exception.NotValidCoordinatesException;
+import com.patriciomascialino.minesweeper.exception.InvalidCoordinatesException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -48,28 +48,28 @@ public class CoordinateTest {
     }
     @Test
     public void coordinateThrowsExceptionWhenXLessThanZeroTest() {
-        final NotValidCoordinatesException notValidCoordinatesException =
-                Assertions.assertThrows(NotValidCoordinatesException.class,
+        final InvalidCoordinatesException invalidCoordinatesException =
+                Assertions.assertThrows(InvalidCoordinatesException.class,
                         () -> new Coordinate(-1, 0));
         assertEquals("Coordinates should be greater or equal to zero. Received: (-1, 0)",
-                notValidCoordinatesException.getMessage());
+                invalidCoordinatesException.getMessage());
     }
 
     @Test
     public void coordinateThrowsExceptionWhenYLessThanZeroTest() {
-        final NotValidCoordinatesException notValidCoordinatesException =
-                Assertions.assertThrows(NotValidCoordinatesException.class,
+        final InvalidCoordinatesException invalidCoordinatesException =
+                Assertions.assertThrows(InvalidCoordinatesException.class,
                         () -> new Coordinate(0, -1));
         assertEquals("Coordinates should be greater or equal to zero. Received: (0, -1)",
-                notValidCoordinatesException.getMessage());
+                invalidCoordinatesException.getMessage());
     }
 
     @Test
     public void coordinateThrowsExceptionWhenXAndYLessThanZeroTest() {
-        final NotValidCoordinatesException notValidCoordinatesException =
-                Assertions.assertThrows(NotValidCoordinatesException.class,
+        final InvalidCoordinatesException invalidCoordinatesException =
+                Assertions.assertThrows(InvalidCoordinatesException.class,
                         () -> new Coordinate(-1, -1));
         assertEquals("Coordinates should be greater or equal to zero. Received: (-1, -1)",
-                notValidCoordinatesException.getMessage());
+                invalidCoordinatesException.getMessage());
     }
 }
